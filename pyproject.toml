@@ -1,0 +1,29 @@
+[project]
+name = "hh-vacancies"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Gammpyr",email = "malak93@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "requests (>=2.32.4,<3.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-cov = "^6.2.1"
+
+
+[tool.poetry.group.lint.dependencies]
+black = "^25.1.0"
+mypy = "^1.16.0"
+flake8 = "^7.2.0"
+
