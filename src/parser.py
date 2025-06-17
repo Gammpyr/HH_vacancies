@@ -6,7 +6,11 @@ import requests
 
 
 class Parser(ABC):
-    pass
+
+    @abstractmethod
+    def get_vacancies(self, keyword):
+        pass
+
 
 
 class HeadHunterAPI(Parser):
@@ -15,38 +19,32 @@ class HeadHunterAPI(Parser):
     """
 
     def __init__(self):
-        self.url = 'https://api.hh.ru/vacancies'
-        self.headers = {'User-Agent': 'HH-User-Agent'}
-        self.params = {'text': '', 'page': 0, 'per_page': 100}
-        self.vacancies = []
+        self.__url = 'https://api.hh.ru/vacancies'
+        self.__headers = {'User-Agent': 'HH-User-Agent'}
+        self.__params = {'text': '', 'page': 0, 'per_page': 100}
+        self.__vacancies = []
 
     def get_vacancies(self, keyword):
         ## сбросить счётчик страниц на 0?
-        self.params['text'] = keyword
+        self.__params['text'] = keyword
 
-        while self.params.get('page') != 20:
-            response = requests.get(self.url, headers=self.headers, params=self.params)
+        while self.__params.get('page') != 20:
+            response = requests.get(self.__url, headers=self.__headers, params=self.__params)
+            if response.status_code != 200:
+                raise requests.RequestException
+
             vacancies = response.json()['items']
-            self.vacancies.extend(vacancies)
-            self.params['page'] += 1
+            self.__vacancies.extend(vacancies)
+            self.__params['page'] += 1
 
-        return self.vacancies
+        return self.__vacancies
 
-    def save_to_file(self, filename='hh'):
-        filepath = Path('./data/') / Path(f'{filename}.json')
-        with open(filepath, 'w', encoding='utf-8') as file:
-            json.dump(self.vacancies, file, indent=4, ensure_ascii=False)
+    # def save_to_file(self, filename='hh'):
+    #     filepath = Path('./data/') / Path(f'{filename}.json')
+    #     with open(filepath, 'w', encoding='utf-8') as file:
+    #         json.dump(self.vacancies, file, indent=4, ensure_ascii=False)
 
 
-# class JSONSaver:
-#     """Сохраняет объект в Json файл в .data/filename.json"""
-#     def __init__(self):
-#         self.datapath = Path('./data/')
-#
-#     def save_to_file(self, data, filename='hh'):
-#         filepath = self.datapath / Path(f'{filename}.json')
-#         with open(filepath, 'w', encoding='utf-8') as file:
-#             json.dump(data, file, indent=4, ensure_ascii=False)
 
 
 if __name__ == '__main__':

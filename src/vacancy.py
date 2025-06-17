@@ -1,23 +1,95 @@
-
-
 class Vacancy:
     """Класс для создания объекта типа Вакансия"""
+    __slots__ = ('name', 'url', 'salary', 'experience')
+
+    name: str
+    url: str
+    salary: (int, str, dict, None)
+    experience: str
 
     def __init__(self, name, url, salary, experience):
-        self.name = name
-        self.url = url
-        self.salary = salary
-        self.experience = experience
+        if isinstance(name, str):
+            self.name = name
+        else:
+            raise ValueError('Неверный тип данных для названия')
+
+        if isinstance(url, str):
+            self.url = url
+        else:
+            raise ValueError('Неверный тип данных для url')
+
+        if isinstance(salary, (str, int, dict)):
+            self.salary = salary
+        elif salary is None:
+            self.salary = None
+        else:
+            raise ValueError('Неверный тип данных для зарплаты')
+
+        if isinstance(experience, str):
+            self.experience = experience
+        else:
+            raise ValueError('Неверный тип данных для названия')
+
+    def __eq__(self, other):
+        if isinstance(other, Vacancy):
+            return self.salary == other.salary
+        else:
+            raise TypeError('Можно сравнивать только объекты класса Vacancy')
+
+    def __ne__(self, other):
+        if isinstance(other, Vacancy):
+            return self.salary != other.salary
+        else:
+            raise TypeError('Можно сравнивать только объекты класса Vacancy')
+
+    def __lt__(self, other):
+        if isinstance(other, Vacancy):
+            return self.salary < other.salary
+        else:
+            raise TypeError('Можно сравнивать только объекты класса Vacancy')
+
+    def __gt__(self, other):
+        if isinstance(other, Vacancy):
+            return self.salary > other.salary
+        else:
+            raise TypeError('Можно сравнивать только объекты класса Vacancy')
+
+    def __le__(self, other):
+        if isinstance(other, Vacancy):
+            return self.salary <= other.salary
+        else:
+            raise TypeError('Можно сравнивать только объекты класса Vacancy')
+
+    def __ge__(self, other):
+        if isinstance(other, Vacancy):
+            return self.salary >= other.salary
+        else:
+            raise TypeError('Можно сравнивать только объекты класса Vacancy')
 
     @classmethod
     def cast_to_object_list(cls, json_data):
-        """Преобразовывает данные из JSON в список объектов"""
+        """Преобразует набор данных из JSON в список объектов"""
         result = [cls(vacancy['name'],
                       vacancy['url'],
                       vacancy['salary'],
                       vacancy['experience']['name']) for vacancy in json_data]
 
         return result
+
+    @classmethod
+    def cast_to_object_dict(cls, vacancies):
+        """Принимает список объектов Vacancy и преобразовывает в словарь"""
+        return [
+            {'name': vacancy.name, 'url': vacancy.url,
+             'salary':
+                 {
+                     'from': vacancy.salary if vacancy.salary is not None else None,
+                     'to': vacancy.salary if vacancy.salary is not None else None,
+                     'currency': vacancy.salary['currency'] if vacancy.salary is not None else None
+                 },
+             'experience': vacancy.experience
+             } for vacancy in vacancies
+        ]
 
     @staticmethod
     def filter_vacancies(vacancies: list, keywords: list):
@@ -41,16 +113,4 @@ class Vacancy:
 
     @staticmethod
     def print_vacancies(vacancies):
-        """Принимает список объектов Vacancy и преобразовывает в словарь"""
-        result = [
-            {'name': vacancy.name,
-             'url': vacancy.url,
-             'salary': {
-                 'from': vacancy.salary.get('from', None) if vacancy.salary is not None else None,
-                 'to': vacancy.salary.get('to', None) if vacancy.salary is not None else None,
-                 'currency': vacancy.salary['currency'] if vacancy.salary is not None else None
-             },
-             'experience': vacancy.experience} for vacancy in vacancies
-        ]
-
-        return result
+        pass
