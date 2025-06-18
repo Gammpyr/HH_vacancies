@@ -8,27 +8,10 @@ class Vacancy:
     experience: str
 
     def __init__(self, name, url, salary, experience):
-        if isinstance(name, str):
-            self.name = name
-        else:
-            raise ValueError('Неверный тип данных для названия')
-
-        if isinstance(url, str):
-            self.url = url
-        else:
-            raise ValueError('Неверный тип данных для url')
-
-        if isinstance(salary, (str, int, dict)):
-            self.salary = salary
-        elif salary is None:
-            self.salary = None
-        else:
-            raise ValueError('Неверный тип данных для зарплаты')
-
-        if isinstance(experience, str):
-            self.experience = experience
-        else:
-            raise ValueError('Неверный тип данных для названия')
+        self.name = name if isinstance(name, str) else 'Неверный формат'
+        self.url = url if isinstance(url, str) else 'Неверный формат'
+        self.salary = salary if isinstance(salary, (str, int, dict, None)) else 'Неверный формат'
+        self.experience = experience if isinstance(experience, (str, int)) else 'Неверный формат'
 
     def __eq__(self, other):
         if isinstance(other, Vacancy):

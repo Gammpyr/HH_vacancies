@@ -1,25 +1,27 @@
 # Создание экземпляра класса для работы с API сайтов с вакансиями
+from pprint import pprint
+
 from src.parser import HeadHunterAPI
 from src.file_workers import JSONSaver
 from src.vacancy import Vacancy
 
-hh_api = HeadHunterAPI()
-
-# Получение вакансий с hh.ru в формате JSON
-hh_vacancies = hh_api.get_vacancies("Python")
-
-# Преобразование набора данных из JSON в список объектов
-vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
+# hh_api = HeadHunterAPI()
+#
+# # Получение вакансий с hh.ru в формате JSON
+# hh_vacancies = hh_api.get_vacancies("Python")
+#
+# # Преобразование набора данных из JSON в список объектов
+# vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
 
 # json_saver = JSONSaver()
 # json_saver.save_to_file(hh_vacancies)
-
-# Пример работы конструктора класса с одной вакансией
-vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/1234>", 100_000,
-                  "Требования: опыт работы от 3 лет...")
-
-vacancy2 = Vacancy("Python Developer2", "<https://hh.ru/vacancy/1234>", 150_000,
-                  "Требования: опыт работы от 5 лет...")
+#
+# # Пример работы конструктора класса с одной вакансией
+# vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/1234>", 100_000,
+#                   "Требования: опыт работы от 3 лет...")
+#
+# vacancy2 = Vacancy("Python Developer2", "<https://hh.ru/vacancy/1234>", 150_000,
+#                   "Требования: опыт работы от 5 лет...")
 
 #
 # # Сохранение информации о вакансиях в файл
