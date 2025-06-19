@@ -17,11 +17,11 @@ from src.vacancy import Vacancy
 # json_saver.save_to_file(hh_vacancies)
 #
 # # Пример работы конструктора класса с одной вакансией
-# vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/1234>", 100_000,
-#                   "Требования: опыт работы от 3 лет...")
-#
-# vacancy2 = Vacancy("Python Developer2", "<https://hh.ru/vacancy/1234>", 150_000,
-#                   "Требования: опыт работы от 5 лет...")
+vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/1234>", 100_000,
+                  "Требования: опыт работы от 3 лет...")
+
+vacancy2 = Vacancy("Python Developer2", "<https://hh.ru/vacancy/12345>", 150_000,
+                  "Требования: опыт работы от 5 лет...")
 
 #
 # # Сохранение информации о вакансиях в файл
@@ -49,8 +49,8 @@ def user_interaction():
 #     user_interaction()
 
 
-# if __name__=='__main__':
-#
-#     json_saver = JSONSaver()
-#     json_saver.add_vacancy(vacancy)
-#     json_saver.add_vacancy(vacancy2)
+if __name__=='__main__':
+
+    json_saver = JSONSaver()
+    json_saver.add_vacancy(vacancy)
+    json_saver.add_vacancy(vacancy2)

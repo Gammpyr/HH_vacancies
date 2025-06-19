@@ -10,8 +10,8 @@ class Vacancy:
     def __init__(self, name, url, salary, experience):
         self.name = name if isinstance(name, str) else 'Неверный формат'
         self.url = url if isinstance(url, str) else 'Неверный формат'
-        self.salary = salary if isinstance(salary, (str, int, dict, None)) else 'Неверный формат'
         self.experience = experience if isinstance(experience, (str, int)) else 'Неверный формат'
+        self.salary = salary if isinstance(salary, (str, int, dict, None)) else 'Неверный формат'
 
     def __eq__(self, other):
         if isinstance(other, Vacancy):
@@ -52,27 +52,34 @@ class Vacancy:
     @classmethod
     def cast_to_object_list(cls, json_data):
         """Преобразует набор данных из JSON в список объектов"""
+
         result = [cls(vacancy['name'],
-                      vacancy['url'],
+                      vacancy['alternate_url'],
+                      vacancy['experience']['name'],
                       vacancy['salary'],
-                      vacancy['experience']['name']) for vacancy in json_data]
+                      ) for vacancy in json_data]
 
         return result
 
     @classmethod
     def cast_to_object_dict(cls, vacancies):
         """Принимает список объектов Vacancy и преобразовывает в словарь"""
-        return [
-            {'name': vacancy.name, 'url': vacancy.url,
-             'salary':
-                 {
-                     'from': vacancy.salary if vacancy.salary is not None else None,
-                     'to': vacancy.salary if vacancy.salary is not None else None,
-                     'currency': vacancy.salary['currency'] if vacancy.salary is not None else None
-                 },
-             'experience': vacancy.experience
-             } for vacancy in vacancies
-        ]
+        if type(vacancies) is not list:
+            return {
+                "name": vacancies.name,
+                "url": vacancies.url,
+                "salary": vacancies.salary,
+                "experience": vacancies.experience
+            }
+        else:
+            return [
+                {
+                    "name": vacancy.name,
+                    "url": vacancy.url,
+                    "salary": vacancy.salary,
+                    "experience": vacancy.experience
+                } for vacancy in vacancies
+            ]
 
     @staticmethod
     def filter_vacancies(vacancies: list, keywords: list):

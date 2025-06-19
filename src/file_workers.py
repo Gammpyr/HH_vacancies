@@ -42,10 +42,20 @@ class JSONSaver(FileWorker):
         filepath = self.datapath / Path(f'{filename}.json')
 
         if isinstance(data, Vacancy):
-            data = Vacancy.cast_to_object_dict([data])
+            data = Vacancy.cast_to_object_dict(data)
+
+        with open(filepath, 'r', encoding='utf-8')as file:
+            json_data = json.load(file)
+
+        if isinstance(json_data, dict):
+            json_data = list(json_data)
+
+        json_data.append(data)
 
         with open(filepath, 'a', encoding='utf-8') as file:
-            json.dump(data, file, indent=4, ensure_ascii=False)
+            json.dump(json_data, file, indent=4, ensure_ascii=False)
+            # file.write(',\n')
+
 
 
     def delete_vacancy(self, filename: str):
