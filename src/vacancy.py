@@ -64,7 +64,8 @@ class Vacancy:
     @classmethod
     def cast_to_object_dict(cls, vacancies):
         """Принимает список объектов Vacancy и преобразовывает в словарь"""
-        if type(vacancies) is not list:
+
+        if type(vacancies) is cls:
             return {
                 "name": vacancies.name,
                 "url": vacancies.url,
@@ -80,6 +81,17 @@ class Vacancy:
                     "experience": vacancy.experience
                 } for vacancy in vacancies
             ]
+
+    @staticmethod
+    def add_unique_vacancy(current_data, new_data):
+        """Проверяет наличие вакансии в """
+        result = []
+        for c_data in current_data:
+            for n_data in new_data:
+                if n_data['url'] != c_data['url']:
+                    result.append(new_data)
+
+        return result
 
     @staticmethod
     def filter_vacancies(vacancies: list, keywords: list):
