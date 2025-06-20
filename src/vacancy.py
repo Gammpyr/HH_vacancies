@@ -83,15 +83,16 @@ class Vacancy:
             ]
 
     @staticmethod
-    def add_unique_vacancy(current_data, new_data):
+    def get_unique_vacancy(current_data, new_data):
         """Проверяет наличие вакансии в """
-        result = []
+        if type(new_data) == dict:
+            new_data = [new_data]
         for c_data in current_data:
             for n_data in new_data:
-                if n_data['url'] != c_data['url']:
-                    result.append(new_data)
+                if n_data['url'] == c_data['url']:
+                    new_data.remove(n_data)
 
-        return result
+        return new_data
 
     @staticmethod
     def filter_vacancies(vacancies: list, keywords: list):

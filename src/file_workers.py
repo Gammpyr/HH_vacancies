@@ -42,15 +42,15 @@ class JSONSaver(FileWorker):
         """Добавляет новую вакансию в указанный файл"""
         filepath = self.datapath / Path(f'{filename}.json')
 
-        if isinstance(data, (Vacancy, list)):
-            data = Vacancy.cast_to_object_dict(data)
+        data = Vacancy.cast_to_object_dict(data)
+
         try:
             with open(filepath, 'r', encoding='utf-8') as file:
                 json_data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             json_data = []
 
-
+        data = Vacancy.get_unique_vacancy(json_data, data)
 
         if isinstance(data, dict):
             json_data.append(data)
