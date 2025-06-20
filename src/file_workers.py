@@ -43,18 +43,19 @@ class JSONSaver(FileWorker):
 
         if isinstance(data, Vacancy):
             data = Vacancy.cast_to_object_dict(data)
-
-        with open(filepath, 'r', encoding='utf-8')as file:
-            json_data = json.load(file)
+        try:
+            with open(filepath, 'r', encoding='utf-8')as file:
+                json_data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            json_data = []
 
         if isinstance(json_data, dict):
             json_data = list(json_data)
 
         json_data.append(data)
 
-        with open(filepath, 'a', encoding='utf-8') as file:
+        with open(filepath, 'w', encoding='utf-8') as file:
             json.dump(json_data, file, indent=4, ensure_ascii=False)
-            # file.write(',\n')
 
 
 
