@@ -17,11 +17,14 @@ from src.vacancy import Vacancy
 # json_saver.save_to_file(hh_vacancies)
 #
 # # Пример работы конструктора класса с одной вакансией
-vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/1234>", 100_000,
-                  "Требования: опыт работы от 3 лет...")
+vacancy = Vacancy("Python Developer1", "<https://hh.ru/vacancy/1111>", 100_000,
+                  "Требования: опыт работы от 1 лет...")
 
-vacancy2 = Vacancy("Python Developer2", "<https://hh.ru/vacancy/12345>", 150_000,
-                  "Требования: опыт работы от 5 лет...")
+vacancy2 = Vacancy("Python Developer2", "<https://hh.ru/vacancy/2222>", 200_000,
+                  "Требования: опыт работы от 2 лет...")
+
+vacancy3 = Vacancy("Python Developer3", "<https://hh.ru/vacancy/3333>", 3000_000,
+                  "Требования: опыт работы от 3 лет...")
 
 #
 # # Сохранение информации о вакансиях в файл
@@ -53,4 +56,5 @@ if __name__=='__main__':
 
     json_saver = JSONSaver()
     json_saver.add_vacancy(vacancy)
-    json_saver.add_vacancy(vacancy2)
+    json_saver.add_vacancy([vacancy2, vacancy3])
+    json_saver.add_vacancy(vacancy3)

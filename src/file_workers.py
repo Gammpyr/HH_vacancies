@@ -4,6 +4,7 @@ from pathlib import Path
 
 from src.vacancy import Vacancy
 
+
 class FileWorker(ABC):
 
     @abstractmethod
@@ -13,6 +14,7 @@ class FileWorker(ABC):
     @abstractmethod
     def get_data_from_file(self):
         pass
+
 
 class JSONSaver(FileWorker):
     """Класс для сохранения в JSON-файл"""
@@ -27,7 +29,7 @@ class JSONSaver(FileWorker):
         with open(filepath, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
-    def get_data_from_file(self, filename: str ='hh'):
+    def get_data_from_file(self, filename: str = 'hh'):
         """Получает данные из указанного файла"""
         filepath = self.datapath / Path(f'{filename}.json')
 
@@ -36,28 +38,27 @@ class JSONSaver(FileWorker):
 
         return data
 
-
-    def add_vacancy(self, data: Vacancy | list[dict], filename: str='hh'):
+    def add_vacancy(self, data: Vacancy | list, filename: str = 'hh'):
         """Добавляет новую вакансию в указанный файл"""
         filepath = self.datapath / Path(f'{filename}.json')
 
-        if isinstance(data, Vacancy):
+        if isinstance(data, (Vacancy, list)):
             data = Vacancy.cast_to_object_dict(data)
         try:
-            with open(filepath, 'r', encoding='utf-8')as file:
+            with open(filepath, 'r', encoding='utf-8') as file:
                 json_data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             json_data = []
 
-        if isinstance(json_data, dict):
-            json_data = list(json_data)
 
-        json_data.append(data)
+
+        if isinstance(data, dict):
+            json_data.append(data)
+        else:
+            json_data.extend(data)
 
         with open(filepath, 'w', encoding='utf-8') as file:
             json.dump(json_data, file, indent=4, ensure_ascii=False)
-
-
 
     def delete_vacancy(self, filename: str):
         """Удаляет все данные из указанного файла"""
@@ -65,6 +66,3 @@ class JSONSaver(FileWorker):
 
         with open(filepath, 'w'):
             pass
-
-
-
