@@ -6,7 +6,7 @@ from src.vacancy import Vacancy
 
 
 class FileWorker(ABC):
-
+    """Абстрактный класс для работы с файлами"""
     @abstractmethod
     def save_to_file(self, data, filename):
         pass
@@ -17,7 +17,7 @@ class FileWorker(ABC):
 
 
 class JSONSaver(FileWorker):
-    """Класс для сохранения в JSON-файл"""
+    """Класс для работы с JSON-файлами"""
 
     def __init__(self):
         self.datapath = Path('./data/')
