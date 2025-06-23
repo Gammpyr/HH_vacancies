@@ -22,7 +22,7 @@ class JSONSaver(FileWorker):
     def __init__(self):
         self.datapath = Path('./data/')
 
-    def save_to_file(self, data, filename='hh'):
+    def save_to_file(self, data: dict, filename='hh'):
         """Сохраняет данные в указанный файл"""
         filepath = self.datapath / Path(f'{filename}.json')
 
@@ -33,8 +33,13 @@ class JSONSaver(FileWorker):
         """Получает данные из указанного файла"""
         filepath = self.datapath / Path(f'{filename}.json')
 
-        with open(filepath, 'r', encoding='utf-8') as file:
-            data = json.load(file)
+        try:
+            with open(filepath, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            return []
+        except json.JSONDecodeError:
+            return []
 
         return data
 
@@ -42,14 +47,16 @@ class JSONSaver(FileWorker):
         """Добавляет новую вакансию в указанный файл"""
         filepath = self.datapath / Path(f'{filename}.json')
 
+        json_data = self.get_data_from_file(filename)
+
+        #
+        # try:
+        #     with open(filepath, 'r', encoding='utf-8') as file:
+        #         json_data = json.load(file)
+        # except (FileNotFoundError, json.JSONDecodeError):
+        #     json_data = []
+
         data = Vacancy.cast_to_object_dict(data)
-
-        try:
-            with open(filepath, 'r', encoding='utf-8') as file:
-                json_data = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            json_data = []
-
         data = Vacancy.get_unique_vacancy(json_data, data)
 
         if isinstance(data, dict):
@@ -63,6 +70,8 @@ class JSONSaver(FileWorker):
     def delete_vacancy(self, filename: str):
         """Удаляет все данные из указанного файла"""
         filepath = self.datapath / Path(f'{filename}.json')
-
-        with open(filepath, 'w'):
-            pass
+        try:
+            with open(filepath, 'w'):
+                pass
+        except FileNotFoundError:
+            print('Такого файла не существует')

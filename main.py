@@ -37,11 +37,11 @@ def user_interaction():
     is_save = input('\nСохранить результат в файл? (Да/Нет) -> ')
 
     # Сохраняем, если пользователь согласился
-    if is_save.lower() == 'да' or  is_save.lower() == 'да':
+    if is_save.lower() == 'да' or  is_save.lower() == 'lf':
         filename = input('Как его назвать? -> ')
         json_saver = JSONSaver()
         json_saver.add_vacancy(top_vacancies, filename)
-        print(f'Список вакансий сохранён в файл /data/{filename}!')
+        print(f'Список вакансий сохранён в файл /data/hh_{filename}!')
 
 if __name__ == "__main__":
     user_interaction()

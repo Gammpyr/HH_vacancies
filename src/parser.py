@@ -23,7 +23,7 @@ class HeadHunterAPI(Parser):
         self.__vacancies = []
 
     def get_vacancies(self, keyword):
-        ## сбрасывать счётчик страниц на 0?
+        ## сбрасывать счётчик страниц на 0 при запуске?
         self.__params['text'] = keyword
 
         while self.__params.get('page') != 20:

@@ -123,7 +123,7 @@ class Vacancy:
         return vacancies[:top_n]
 
     @staticmethod
-    def print_vacancies(vacancies):
+    def print_vacancies(vacancies: list):
         vacancy_list = Vacancy.cast_to_object_dict(vacancies)
 
         for i in range(len(vacancy_list)):
