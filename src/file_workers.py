@@ -49,13 +49,6 @@ class JSONSaver(FileWorker):
 
         json_data = self.get_data_from_file(filename)
 
-        #
-        # try:
-        #     with open(filepath, 'r', encoding='utf-8') as file:
-        #         json_data = json.load(file)
-        # except (FileNotFoundError, json.JSONDecodeError):
-        #     json_data = []
-
         data = Vacancy.cast_to_object_dict(data)
         data = Vacancy.get_unique_vacancy(json_data, data)
 

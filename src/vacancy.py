@@ -1,10 +1,13 @@
+from typing import Any
+
+
 class Vacancy:
     """Класс для создания объекта типа Вакансия"""
     __slots__ = ('name', 'url', 'salary', 'experience', 'description')
 
     name: str
     url: str
-    salary: (int, str, dict, None)
+    salary: [int, str, dict, None]
     experience: str
     description: str
 
@@ -16,38 +19,56 @@ class Vacancy:
         self.description = description if isinstance(description, (str, int)) else 'Неверный формат'
 
     def __eq__(self, other):
-        if isinstance(other, Vacancy):
-            return self.salary == other.salary
+        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
+            if self.salary is not None and other.salary is not None:
+                return self.salary['from'] == other.salary['from']
+            else:
+                return 'Не указана зарплата'
         else:
             raise TypeError('Можно сравнивать только объекты класса Vacancy')
 
     def __ne__(self, other):
-        if isinstance(other, Vacancy):
-            return self.salary != other.salary
+        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
+            if self.salary is not None and other.salary is not None:
+                return self.salary['from'] != other.salary['from']
+            else:
+                return 'Не указана зарплата'
         else:
             raise TypeError('Можно сравнивать только объекты класса Vacancy')
 
     def __lt__(self, other):
-        if isinstance(other, Vacancy):
-            return self.salary < other.salary
+        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
+            if self.salary is not None and other.salary is not None:
+                return self.salary['from'] < other.salary['from']
+            else:
+                return 'Не указана зарплата'
         else:
             raise TypeError('Можно сравнивать только объекты класса Vacancy')
 
     def __gt__(self, other):
-        if isinstance(other, Vacancy):
-            return self.salary > other.salary
+        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
+            if self.salary is not None and other.salary is not None:
+                return self.salary['from'] > other.salary['from']
+            else:
+                return 'Не указана зарплата'
         else:
             raise TypeError('Можно сравнивать только объекты класса Vacancy')
 
     def __le__(self, other):
-        if isinstance(other, Vacancy):
-            return self.salary <= other.salary
+        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
+            if self.salary is not None and other.salary is not None:
+                return self.salary['from'] <= other.salary['from']
+            else:
+                return 'Не указана зарплата'
         else:
             raise TypeError('Можно сравнивать только объекты класса Vacancy')
 
     def __ge__(self, other):
-        if isinstance(other, Vacancy):
-            return self.salary >= other.salary
+        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
+            if self.salary is not None and other.salary is not None:
+                return self.salary['from'] >= other.salary['from']
+            else:
+                return 'Не указана зарплата'
         else:
             raise TypeError('Можно сравнивать только объекты класса Vacancy')
 
@@ -64,7 +85,7 @@ class Vacancy:
         return result
 
     @classmethod
-    def cast_to_object_dict(cls, vacancies):
+    def cast_to_object_dict(cls, vacancies: Any):
         """Принимает список объектов Vacancy и преобразовывает в словарь"""
 
         if type(vacancies) is cls:
@@ -113,9 +134,9 @@ class Vacancy:
                     and salary_from <= vacancy.salary.get('from', 0) <= int(salary_to)]
 
     @staticmethod
-    def sort_vacancies(vacancies: list[dict]):
+    def sort_vacancies(vacancies: list):
         """Сортирует вакансии по убыванию зарплат"""
-        return sorted(vacancies, key=lambda x: x.salary['from'])
+        return sorted(vacancies, key=lambda x: x.salary['from'], reverse=True)
 
     @staticmethod
     def get_top_vacancies(vacancies, top_n):
