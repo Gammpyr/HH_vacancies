@@ -1,14 +1,12 @@
-# Создание экземпляра класса для работы с API сайтов с вакансиями
-from pprint import pprint
-
-from src.parser import HeadHunterAPI
 from src.file_workers import JSONSaver
+from src.parser import HeadHunterAPI
 from src.vacancy import Vacancy
 
 hh_api = HeadHunterAPI()
 
+
 # Функция для взаимодействия с пользователем
-def user_interaction():
+def user_interaction() -> None:
     search_query = input("Введите поисковый запрос: ")
     print("Введите диапазон зарплат: ")
     salary_from = int(input("От: "))
@@ -34,14 +32,15 @@ def user_interaction():
     Vacancy.print_vacancies(top_vacancies)
 
     # Узнаём, нужно ли сохранение
-    is_save = input('\nСохранить результат в файл? (Да/Нет) -> ')
+    is_save = input("\nСохранить результат в файл? (Да/Нет) -> ")
 
     # Сохраняем, если пользователь согласился
-    if is_save.lower() == 'да' or  is_save.lower() == 'lf':
-        filename = input('Как его назвать? -> ')
+    if is_save.lower() == "да" or is_save.lower() == "lf":
+        filename = input("Введите название для файла -> ")
         json_saver = JSONSaver()
         json_saver.add_vacancy(top_vacancies, filename)
-        print(f'Список вакансий сохранён в файл /data/hh_{filename}!')
+        print(f"Список вакансий сохранён в файл /data/{filename}!")
+
 
 if __name__ == "__main__":
     user_interaction()
