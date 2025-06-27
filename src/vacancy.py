@@ -9,17 +9,15 @@ class Vacancy:
     name: str
     url: str
     experience: str
-    salary: dict
+    salary: (dict, int)
     description: str
 
-    def __init__(self, name: str, url: str, experience: str, salary: dict, description: str) -> None:
-        self.name = name if isinstance(name, str) else "Неверный формат"
-        self.url = url if isinstance(url, str) else "Неверный формат"
-        self.experience = (
-            experience if isinstance(experience, (str, int)) else "Неверный формат"
-        )  # else experience['name'] if isinstance(experience, dict)
-        self.salary = salary if isinstance(salary, (dict, type(None))) else "Неверный формат"
-        self.description = description if isinstance(description, (str, int)) else "Неверный формат"
+    def __init__(self, name: str, url: str, experience: str, salary: dict | int, description: str) -> None:
+        self.name = self.__validate_name(name)
+        self.url = self.__validate_url(url)
+        self.experience = self.__validate_experience(experience)
+        self.salary = self.__validate_salary(salary)
+        self.description = self.__validate_description(description)
 
     def __eq__(self, other: Any) -> Any:
         if isinstance(other, Vacancy) and isinstance(self, Vacancy):
@@ -74,6 +72,68 @@ class Vacancy:
                 return "Не указана зарплата"
         else:
             raise TypeError("Можно сравнивать только объекты класса Vacancy")
+
+    def __validate_name(self, name: str) -> str:
+        """Валидация названия вакансии"""
+        if not isinstance(name, str):
+            raise TypeError("Название вакансии должно быть строкой")
+        if not name.split():
+            raise ValueError("Название вакансии не должно быть пустым")
+
+        return name
+
+    def __validate_url(self, url: str) -> str:
+        """Валидация URL вакансии"""
+        if not isinstance(url, str):
+            raise TypeError("URL вакансии должен быть строкой")
+        if not url.startswith(('http://', 'https://', 'www.')):
+            raise ValueError("URL должен начинаться с http://, https:// или www")
+
+        return url
+
+    def __validate_experience(self, experience: str) -> str:
+        """Валидация опыта работы"""
+        if not isinstance(experience, str):
+            raise TypeError("Опыт работы должен быть строкой")
+        if not experience.strip():
+            raise ValueError("Опыт работы не должен быть пустым")
+
+        return experience
+
+    def __validate_salary(self, salary: dict | int) -> dict:
+        """Валидация данных о зарплате"""
+
+        if isinstance(salary, type(None)):
+            return {'from': None, 'to': None, 'currency': None}
+
+        if isinstance(salary, (int, float)):
+            return {'from': salary, 'to': None, 'currency': 'RUR'}
+
+        if not isinstance(salary, dict):
+            raise TypeError("Зарплата должна быть представлена словарем")
+
+        if 'from' in salary and not isinstance(salary['from'], (int, float, type(None))):
+            raise TypeError("Зарплата 'from' должна быть числом или None")
+
+        if 'to' in salary and not isinstance(salary['to'], (int, float, type(None))):
+            raise TypeError("Зарплата 'to' должна быть числом или None")
+
+        if 'currency' in salary and not isinstance(salary['currency'], (str, type(None))):
+            raise TypeError("Валюта должна быть строкой или None")
+
+        return salary
+
+
+    def __validate_description(self, description: str) -> str:
+        """Валидация описания вакансии"""
+        if not isinstance(description, str):
+            raise TypeError("Описание вакансии должно быть строкой")
+        if not description.split():
+            raise ValueError("Описание вакансии не должно быть пустым")
+
+        return description
+
+
 
     @classmethod
     def cast_to_object_list(cls, json_data: dict | list) -> list:
