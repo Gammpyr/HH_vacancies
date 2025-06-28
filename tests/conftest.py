@@ -6,9 +6,9 @@ from src.vacancy import Vacancy
 @pytest.fixture
 def data_test():
     return [
-        Vacancy("", "", "", {"from": 20000}, ""),
-        Vacancy("", "", "", {"from": 10000}, ""),
-        Vacancy("", "", "", {"from": 30000}, ""),
+        Vacancy("a", "www.", "0", {"from": 20000}, "0"),
+        Vacancy("a", "www.", "0", {"from": 10000}, "0"),
+        Vacancy("a", "www.", "0", {"from": 30000}, "0"),
     ]
 
 
@@ -29,7 +29,7 @@ def fake_vacancy3():
 
 @pytest.fixture
 def fake_vacancy4():
-    return Vacancy("None", "None", "None", None, "None")
+    return Vacancy("None", "www.None", "None", None, "None")
 
 
 @pytest.fixture

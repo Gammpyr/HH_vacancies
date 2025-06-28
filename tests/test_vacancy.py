@@ -14,7 +14,6 @@ def test_vacancy(fake_vacancy):
 def test_vacancy_eq(fake_vacancy, fake_vacancy2, fake_vacancy3, fake_vacancy4):
     assert (fake_vacancy == fake_vacancy2) is False
     assert (fake_vacancy2 == fake_vacancy3) is True
-    assert (fake_vacancy3 == fake_vacancy4) == "Не указана зарплата"
     with pytest.raises(TypeError):
         fake_vacancy == 10
 
@@ -22,7 +21,6 @@ def test_vacancy_eq(fake_vacancy, fake_vacancy2, fake_vacancy3, fake_vacancy4):
 def test_vacancy_ne(fake_vacancy, fake_vacancy2, fake_vacancy3, fake_vacancy4):
     assert (fake_vacancy != fake_vacancy2) is True
     assert (fake_vacancy2 != fake_vacancy3) is False
-    assert (fake_vacancy3 != fake_vacancy4) == "Не указана зарплата"
     with pytest.raises(TypeError):
         fake_vacancy != 10
 
@@ -31,7 +29,6 @@ def test_vacancy_lt(fake_vacancy, fake_vacancy2, fake_vacancy3, fake_vacancy4):
     assert (fake_vacancy < fake_vacancy2) is True
     assert (fake_vacancy2 < fake_vacancy) is False
     assert (fake_vacancy2 < fake_vacancy3) is False
-    assert (fake_vacancy3 < fake_vacancy4) == "Не указана зарплата"
     with pytest.raises(TypeError):
         fake_vacancy < 10
 
@@ -40,7 +37,6 @@ def test_vacancy_gt(fake_vacancy, fake_vacancy2, fake_vacancy3, fake_vacancy4):
     assert (fake_vacancy > fake_vacancy2) is False
     assert (fake_vacancy2 > fake_vacancy) is True
     assert (fake_vacancy2 > fake_vacancy3) is False
-    assert (fake_vacancy3 > fake_vacancy4) == "Не указана зарплата"
     with pytest.raises(TypeError):
         fake_vacancy > 10
 
@@ -49,7 +45,6 @@ def test_vacancy_le(fake_vacancy, fake_vacancy2, fake_vacancy3, fake_vacancy4):
     assert (fake_vacancy <= fake_vacancy2) is True
     assert (fake_vacancy2 <= fake_vacancy) is False
     assert (fake_vacancy2 <= fake_vacancy3) is True
-    assert (fake_vacancy3 <= fake_vacancy4) == "Не указана зарплата"
     with pytest.raises(TypeError):
         fake_vacancy <= 10
 
@@ -58,7 +53,6 @@ def test_vacancy_ge(fake_vacancy, fake_vacancy2, fake_vacancy3, fake_vacancy4):
     assert (fake_vacancy >= fake_vacancy2) is False
     assert (fake_vacancy2 >= fake_vacancy3) is True
     assert (fake_vacancy2 >= fake_vacancy) is True
-    assert (fake_vacancy3 >= fake_vacancy4) == "Не указана зарплата"
     with pytest.raises(TypeError):
         fake_vacancy >= 10
 
@@ -114,3 +108,27 @@ def test_get_top_vacancies(data_test):
     expected = [data_test[0], data_test[1]]
 
     assert result == expected
+
+def test_validate_url_err():
+    with pytest.raises(ValueError):
+        Vacancy('name', 'url','',{},'')
+
+def test_validate_salary_int_float():
+    result = Vacancy('name', 'www.', '111', 10000, '222')
+    assert result.salary == {'from': 10000, 'to': None, 'currency': 'RUR'}
+
+def test_validate_salary_not_dict_err():
+    with pytest.raises(TypeError):
+        Vacancy('name', 'www.','222',[],'11')
+
+def test_validate_salary_from_not_int_err():
+    with pytest.raises(TypeError):
+        Vacancy('name', 'www.','222',{'from': []},'11')
+
+def test_validate_salary_to_not_int_err():
+    with pytest.raises(TypeError):
+        Vacancy('name', 'www.','222',{'to': []},'11')
+
+def test_validate_salary_currency_not_int_err():
+    with pytest.raises(TypeError):
+        Vacancy('name', 'www.','222',{'currency': []},'11')
