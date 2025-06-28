@@ -1,5 +1,7 @@
 from typing import Any
 
+from src.utils import check_salary_type, is_string, is_empty
+
 
 class Vacancy:
     """Класс для создания объекта типа Вакансия"""
@@ -20,72 +22,39 @@ class Vacancy:
         self.description = self.__validate_description(description)
 
     def __eq__(self, other: Any) -> Any:
-        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
-            if self.salary is not None and other.salary is not None:
-                return self.salary["from"] == other.salary["from"]
-            else:
-                return "Не указана зарплата"
-        else:
-            raise TypeError("Можно сравнивать только объекты класса Vacancy")
+        check_salary_type(self, other)
+        return self.salary["from"] == other.salary["from"]
 
     def __ne__(self, other: Any) -> Any:
-        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
-            if self.salary is not None and other.salary is not None:
-                return self.salary["from"] != other.salary["from"]
-            else:
-                return "Не указана зарплата"
-        else:
-            raise TypeError("Можно сравнивать только объекты класса Vacancy")
+        check_salary_type(self, other)
+        return self.salary["from"] != other.salary["from"]
 
     def __lt__(self, other: Any) -> Any:
-        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
-            if self.salary is not None and other.salary is not None:
-                return self.salary["from"] < other.salary["from"]
-            else:
-                return "Не указана зарплата"
-        else:
-            raise TypeError("Можно сравнивать только объекты класса Vacancy")
+        check_salary_type(self, other)
+        return self.salary["from"] < other.salary["from"]
 
     def __gt__(self, other: Any) -> Any:
-        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
-            if self.salary is not None and other.salary is not None:
-                return self.salary["from"] > other.salary["from"]
-            else:
-                return "Не указана зарплата"
-        else:
-            raise TypeError("Можно сравнивать только объекты класса Vacancy")
+        check_salary_type(self, other)
+        return self.salary["from"] > other.salary["from"]
 
     def __le__(self, other: Any) -> Any:
-        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
-            if self.salary is not None and other.salary is not None:
-                return self.salary["from"] <= other.salary["from"]
-            else:
-                return "Не указана зарплата"
-        else:
-            raise TypeError("Можно сравнивать только объекты класса Vacancy")
+        check_salary_type(self, other)
+        return self.salary["from"] <= other.salary["from"]
 
     def __ge__(self, other: Any) -> Any:
-        if isinstance(other, Vacancy) and isinstance(self, Vacancy):
-            if self.salary is not None and other.salary is not None:
-                return self.salary["from"] >= other.salary["from"]
-            else:
-                return "Не указана зарплата"
-        else:
-            raise TypeError("Можно сравнивать только объекты класса Vacancy")
+        check_salary_type(self, other)
+        return self.salary["from"] >= other.salary["from"]
 
     def __validate_name(self, name: str) -> str:
         """Валидация названия вакансии"""
-        if not isinstance(name, str):
-            raise TypeError("Название вакансии должно быть строкой")
-        if not name.split():
-            raise ValueError("Название вакансии не должно быть пустым")
+        is_string(name, "Название вакансии")
+        is_empty(name, "Название вакансии")
 
         return name
 
     def __validate_url(self, url: str) -> str:
         """Валидация URL вакансии"""
-        if not isinstance(url, str):
-            raise TypeError("URL вакансии должен быть строкой")
+        is_string(url, "URL")
         if not url.startswith(('http://', 'https://', 'www.')):
             raise ValueError("URL должен начинаться с http://, https:// или www")
 
@@ -93,10 +62,8 @@ class Vacancy:
 
     def __validate_experience(self, experience: str) -> str:
         """Валидация опыта работы"""
-        if not isinstance(experience, str):
-            raise TypeError("Опыт работы должен быть строкой")
-        if not experience.strip():
-            raise ValueError("Опыт работы не должен быть пустым")
+        is_string(experience, "Опыт работы")
+        is_empty(experience, "Опыт работы")
 
         return experience
 
@@ -123,17 +90,12 @@ class Vacancy:
 
         return salary
 
-
     def __validate_description(self, description: str) -> str:
         """Валидация описания вакансии"""
-        if not isinstance(description, str):
-            raise TypeError("Описание вакансии должно быть строкой")
-        if not description.split():
-            raise ValueError("Описание вакансии не должно быть пустым")
+        is_string(description, "Описание вакансии")
+        is_empty(description, "Описание вакансии")
 
         return description
-
-
 
     @classmethod
     def cast_to_object_list(cls, json_data: dict | list) -> list:
@@ -145,7 +107,8 @@ class Vacancy:
                 vacancy["alternate_url"],
                 vacancy["experience"]["name"],
                 vacancy["salary"] if vacancy["salary"] is not None else {"from": 0, "to": 0, "currency": None},
-                vacancy["snippet"]["responsibility"],
+                vacancy["snippet"]["responsibility"] if vacancy["snippet"]["responsibility"] is not None
+                else "Описание отсутствует",
             )
             for vacancy in json_data
         ]
@@ -154,7 +117,7 @@ class Vacancy:
 
     @classmethod
     def cast_to_object_dict(cls, vacancies: Any) -> list | dict:
-        """Принимает список объектов Vacancy и преобразовывает в словарь"""
+        """Принимает список объектов Vacancy и преобразовывает их в словарь"""
 
         if type(vacancies) is cls:
             return {
@@ -196,16 +159,16 @@ class Vacancy:
                 vacancy
                 for vacancy in vacancies
                 if vacancy.salary is not None
-                and vacancy.salary.get("from") is not None
-                and salary_from <= vacancy.salary.get("from", 0)
+                   and vacancy.salary.get("from") is not None
+                   and salary_from <= vacancy.salary.get("from", 0)
             ]
         else:
             return [
                 vacancy
                 for vacancy in vacancies
                 if vacancy.salary is not None
-                and vacancy.salary.get("from") is not None
-                and salary_from <= vacancy.salary.get("from", 0) <= int(salary_to)
+                   and vacancy.salary.get("from") is not None
+                   and salary_from <= vacancy.salary.get("from", 0) <= int(salary_to)
             ]
 
     @staticmethod
@@ -227,9 +190,8 @@ class Vacancy:
             print(vacancy_list[i]["url"])
             print(f"{vacancy_list[i]['description']}")
             print(
-                f"Зарплата: "
-                f"От: {vacancy_list[i]['salary']['from']} "
-                f"До: {vacancy_list[i]['salary']['to']} "
-                f"Валюта: {vacancy_list[i]['salary']['currency']}"
-            )
+                f"""Зарплата: 
+         От: {vacancy_list[i]['salary']['from']}
+         До: {vacancy_list[i]['salary']['to']}
+         Валюта: {vacancy_list[i]['salary']['currency']}""")
             print(f"Требуется опыт: {vacancy_list[i]['experience']}")
