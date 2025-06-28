@@ -39,7 +39,7 @@ def user_interaction() -> None:
         filename = input("Введите название для файла -> ")
         json_saver = JSONSaver()
         json_saver.add_vacancy(top_vacancies, filename)
-        print(f"Список вакансий сохранён в файл /data/{filename}!")
+        print(f"Список вакансий сохранён в файл по адресу '/data/{filename}.json'!")
 
 
 if __name__ == "__main__":
