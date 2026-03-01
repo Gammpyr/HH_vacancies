@@ -14,18 +14,25 @@ def user_interaction() -> None:
     top_n = int(input("Введите количество вакансий для вывода в топ N: "))
 
     # Получение вакансий с hh.ru в формате JSON
+    print('Получаем список вакансий...')
     hh_vacancies = hh_api.get_vacancies(search_query)
 
     # Преобразование набора данных из JSON в список объектов
     vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
 
+    # Отбираем вакансии только в рублях
+    print('Фильтруем вакансии по валюте...')
+    vacancies_rur_only = Vacancy.get_rur_only_vacancies(vacancies_list)
+
     # Фильтруем по зарплате в указанном диапазоне
-    ranged_vacancies = Vacancy.get_vacancies_by_salary(vacancies_list, salary_from, salary_to)
+    print('Фильтруем вакансии по зарплате...')
+    ranged_vacancies = Vacancy.get_vacancies_by_salary(vacancies_rur_only, salary_from, salary_to)
 
     # Сортируем вакансии по убыванию зарплаты
     sorted_vacancies = Vacancy.sort_vacancies(ranged_vacancies)
 
     # Отбираем только топ-n вакансий по зарплате
+    print('Выбираем топ вакансий...')
     top_vacancies = Vacancy.get_top_vacancies(sorted_vacancies, top_n)
 
     # Выводим результат
