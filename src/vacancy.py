@@ -172,6 +172,15 @@ class Vacancy:
             ]
 
     @staticmethod
+    def get_rur_only_vacancies(vacancies_list: list) -> list:
+        """Возвращает список вакансий с валютой RUR"""
+        if vacancies_list:
+            return [vacancy for vacancy in vacancies_list if vacancy.salary["currency"] == "RUR"]
+        else:
+            return []
+
+
+    @staticmethod
     def sort_vacancies(vacancies: list) -> list:
         """Сортирует вакансии по убыванию зарплат"""
         return sorted(vacancies, key=lambda x: x.salary["from"], reverse=True)
@@ -186,7 +195,7 @@ class Vacancy:
         vacancy_list = Vacancy.cast_to_object_dict(vacancies)
 
         for i in range(len(vacancy_list)):
-            print(f"\n{i + 1}. {vacancy_list[i]['name']}")
+            print(f"\n\n{i + 1}. {vacancy_list[i]['name']}")
             print(vacancy_list[i]["url"])
             print(f"{vacancy_list[i]['description']}")
             print(
